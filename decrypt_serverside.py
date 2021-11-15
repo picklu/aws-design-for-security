@@ -1,7 +1,6 @@
 import boto3
 
 
-
 bucket_name = 'udacity-s3-bucket'
 client = boto3.client('s3')
 

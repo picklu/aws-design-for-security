@@ -1,7 +1,6 @@
 import boto3
 
 
-
 bucket_name = 'udacity-s3-bucket'
 file_name = 'index.html'
 
