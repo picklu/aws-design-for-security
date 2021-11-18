@@ -1,23 +1,26 @@
+import os
 import boto3
+from dotenv import load_dotenv
 
 
-bucket_name = 'udacity-s3-bucket'
-file_name = 'index.html'
-
+load_dotenv()
 client = boto3.client('s3')
 
-try:
-    file = open(file_name, 'br')
-    response = client.put_object(
-        Body=file,
-        Bucket=bucket_name,
-        Key='hello_boto.txt',
-        ServerSideEncryption='aws:kms',
-        SSEKMSKeyId='db920116-96ca-463e-9176-96f900049fbc'
-    )
-    print(response)
-except:
-    print("Something went wrong!")
 
-finally:
+def encrypt_file(file_name, upload_as):
+    """Upload file_name as upload_as"""
+    with open(file_name, 'br') as file:
+        response = client.put_object(
+            Body=file,
+            Bucket=os.getenv('BUCKET_NAME'),
+            Key=upload_as,
+            ServerSideEncryption=os.getenv('ENCRYPTION'),
+            SSEKMSKeyId=os.getenv('KEY_ARN')
+        )
+    return response
+
+
+if __name__ == "__main__":
+    response = encrypt_file('index.html', 'hello_bucket.txt')
+    print(response.get('ResponseMetadata', {}).get('HTTPStatusCode', 1))
     print("done!")
